@@ -1,0 +1,133 @@
+#include "utils/CREATOR.huff"
+
+#define macro MEMIT() = takes (0) returns (0) {
+    // Algorithm:
+    // Start with the last quarter first and work backwards
+    // This is because mstore (cheaper than mstore8) will overwrite 32 bytes at a time (regardless of empty bytes in stack)
+    // You cannot work forwards because you need to use shifting to truncate the data into quarters
+    // Add a 32 buffer of memory to allow yourself workspace as you reach the front of the data
+    // MLOAD and MSTORE to shift the memory back into place
+
+    caller
+    0x40
+    shr
+    0x40
+    mstore
+
+    number
+    0x38
+    mstore
+
+    timestamp
+    0x30
+    mstore
+
+    caller
+    0x28
+    mstore
+
+    caller
+    0x20
+    mstore
+    0x20
+    0x20
+    sha3
+    0xC0
+    shr
+    0x20
+    mstore
+
+    caller
+    0x80
+    shr
+    0x18
+    mstore
+
+    caller
+    0x10
+    mstore
+    0x20
+    0x10
+    sha3
+    0x80
+    shr
+    0x10
+    mstore
+
+    0x20
+    mload
+    0x40
+    mload
+
+    0x00
+    0x40
+    mstore
+    0x20
+    mstore
+    0x00
+    mstore
+}
+
+/* opcode reference (tested in evm.playground)
+
+CALLER
+PUSH4 0x40
+SHR
+PUSH2 0x40
+MSTORE
+
+NUMBER
+PUSH2 0x38
+MSTORE
+
+TIMESTAMP
+PUSH2 0x30
+MSTORE
+
+CALLER
+PUSH2 0x28
+MSTORE
+
+CALLER
+PUSH2 0x20
+MSTORE
+PUSH2 0x20
+PUSH2 0x20
+SHA3
+PUSH2 0xC0
+SHR
+PUSH2 0x20
+MSTORE
+
+CALLER
+PUSH2 0x80
+SHR
+PUSH2 0x18
+MSTORE
+
+CALLER
+PUSH2 0x10
+MSTORE
+PUSH2 0x20
+PUSH2 0x10
+SHA3
+PUSH2 0x80
+SHR
+PUSH2 0x10
+MSTORE
+
+PUSH2 0x20
+MLOAD
+PUSH2 0x40
+MLOAD
+
+PUSH2 0x00
+PUSH2 0x40
+MSTORE
+PUSH2 0x20
+MSTORE
+PUSH2 0x00
+MSTORE
+
+*/
+

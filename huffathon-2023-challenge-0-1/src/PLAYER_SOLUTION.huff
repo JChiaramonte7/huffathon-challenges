@@ -1,0 +1,15 @@
+#include "utils/CREATOR.huff"
+
+#define macro STACKIT() = takes (0) returns (11) {
+    caller 0x69 shr
+    0x69
+    caller 0x69 shr
+    number 0x69 shr
+    0x69
+    timestamp 0x69 shr
+    0x69
+    caller 0x69 shr
+    number 0x69 shr
+    caller 0x69 shr
+    timestamp 0x69 shr
+}
